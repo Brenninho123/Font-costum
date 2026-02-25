@@ -1,88 +1,76 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TTF Font Preview Studio</title>
-
-    <link rel="stylesheet" href="css/style.css">
-
-    <!-- Google Icons -->
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TTF Font Studio Pro</title>
+<link rel="stylesheet" href="css/style.css">
 </head>
+
 <body>
 
-    <div class="app">
+<div class="app">
 
-        <!-- Header -->
-        <header class="header">
-            <h1>TTF Font Preview Studio</h1>
-            <p>Importe sua fonte .TTF e personalize seu texto</p>
-        </header>
+    <header>
+        <h1>TTF Font Studio Pro</h1>
+        <button id="themeToggle">🌙</button>
+    </header>
 
-        <!-- Editor -->
-        <section class="editor">
+    <div class="editor">
 
-            <!-- Texto -->
-            <div class="editor-section">
-                <label>Texto</label>
-                <textarea id="textInput" placeholder="Digite seu texto aqui..."></textarea>
-            </div>
+        <textarea id="textInput" placeholder="Digite seu texto aqui..."></textarea>
 
-            <!-- Controles -->
-            <div class="editor-controls">
+        <div class="controls">
 
-                <div class="control-group">
-                    <label>Importar Fonte (.ttf)</label>
-                    <input type="file" id="fontUpload" accept=".ttf">
-                </div>
+            <input type="file" id="fontUpload" accept=".ttf">
 
-                <div class="control-group">
-                    <label>Tamanho</label>
-                    <input type="range" id="fontSize" min="12" max="150" value="32">
-                </div>
+            <label>Tamanho</label>
+            <input type="range" id="fontSize" min="10" max="200" value="48">
 
-                <div class="control-group">
-                    <label>Cor</label>
-                    <input type="color" id="fontColor" value="#ffffff">
-                </div>
+            <label>Cor</label>
+            <input type="color" id="fontColor" value="#ffffff">
 
-                <div class="control-group">
-                    <label>Alinhamento</label>
-                    <select id="textAlign">
-                        <option value="left">Esquerda</option>
-                        <option value="center" selected>Centro</option>
-                        <option value="right">Direita</option>
-                    </select>
-                </div>
+            <label>Gradiente</label>
+            <input type="color" id="grad1" value="#ff0000">
+            <input type="color" id="grad2" value="#0000ff">
 
-                <div class="control-group">
-                    <button class="export-btn" onclick="downloadImage()">
-                        Exportar como PNG
-                    </button>
-                </div>
+            <label>Sombra</label>
+            <input type="range" id="shadowX" min="-20" max="20" value="2">
+            <input type="range" id="shadowY" min="-20" max="20" value="2">
+            <input type="range" id="shadowBlur" min="0" max="30" value="5">
 
-            </div>
+            <label>Outline</label>
+            <input type="range" id="strokeWidth" min="0" max="10" value="0">
 
-        </section>
+            <label>Espaçamento</label>
+            <input type="range" id="letterSpacing" min="0" max="20" value="0">
 
-        <!-- Preview -->
-        <section class="preview-section">
-            <div class="preview-container">
-                <p id="previewText">Seu texto aparecerá aqui</p>
-            </div>
-        </section>
+            <label>Alinhamento</label>
+            <select id="textAlign">
+                <option value="left">Esquerda</option>
+                <option value="center" selected>Centro</option>
+                <option value="right">Direita</option>
+            </select>
 
-        <!-- Footer -->
-        <footer class="footer">
-            <p>© 2026 - TTF Font Studio</p>
-        </footer>
+            <label>Fundo</label>
+            <input type="color" id="bgColor" value="#1e1e1e">
 
+            <button onclick="copyText()">Copiar Texto</button>
+            <button onclick="downloadImage()">Exportar PNG</button>
+
+        </div>
     </div>
 
-    <!-- html2canvas -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-    <script src="js/script.js"></script>
+    <div class="preview-container" id="previewContainer">
+        <div id="previewText" contenteditable="true">
+            Seu texto aparecerá aqui
+        </div>
+    </div>
+
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="js/script.js"></script>
 
 </body>
 </html>
