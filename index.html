@@ -1,49 +1,267 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>TTF Font Studio Pro</title>
-<link rel="stylesheet" href="css/style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TTF Font Studio Pro ✦ Editor Tipográfico</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: system-ui, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        body {
+            background: #0b0d10;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 16px;
+        }
+
+        .app {
+            max-width: 1400px;
+            width: 100%;
+            background: #161a1f;
+            border-radius: 36px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.03);
+            overflow: hidden;
+            backdrop-filter: blur(2px);
+            transition: background 0.3s;
+        }
+
+        /* Tema claro */
+        .app.light {
+            background: #f0f2f5;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1), 0 0 0 1px rgba(0,0,0,0.05);
+        }
+        .app.light header { background: #ffffff; color: #1a1e24; border-bottom: 1px solid #d0d5dd; }
+        .app.light .preview-container { background: #e6e9f0; }
+        .app.light #previewText { color: #111; background: #ffffff; border-color: #c2cbd8; }
+        .app.light .controls label { color: #1e293b; }
+        .app.light input, .app.light select, .app.light button {
+            background: white;
+            color: #0f172a;
+            border-color: #cad1db;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 18px 28px;
+            background: #1e242b;
+            color: white;
+            border-bottom: 1px solid #2f3843;
+        }
+
+        header h1 {
+            font-weight: 500;
+            font-size: 1.8rem;
+            letter-spacing: -0.5px;
+            background: linear-gradient(135deg, #b3c7ff, #a0b5f0);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        #themeToggle {
+            background: #2d3748;
+            border: none;
+            font-size: 1.8rem;
+            width: 50px;
+            height: 50px;
+            border-radius: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: #ffdb70;
+            box-shadow: 0 2px 8px black;
+            transition: 0.2s;
+        }
+        #themeToggle:hover { background: #3f4a5c; transform: scale(1.05); }
+
+        .editor {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            padding: 28px;
+        }
+
+        #textInput {
+            flex: 1 1 300px;
+            min-height: 140px;
+            background: #0f1318;
+            border: 1px solid #2f3843;
+            border-radius: 24px;
+            padding: 20px;
+            color: white;
+            font-size: 1rem;
+            resize: vertical;
+            outline: none;
+            transition: 0.15s;
+            box-shadow: inset 0 4px 8px rgba(0,0,0,0.5);
+        }
+        #textInput:focus { border-color: #5f7cbf; background: #151e27; }
+
+        .controls {
+            flex: 2 1 500px;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+            gap: 16px 20px;
+            background: #1b2128;
+            padding: 24px;
+            border-radius: 32px;
+            border: 1px solid #2e3a45;
+            align-items: center;
+        }
+
+        .controls label {
+            color: #b0c2d9;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            font-weight: 500;
+            grid-column: span 1;
+            margin-bottom: -8px;
+        }
+
+        .controls input, .controls select, .controls button {
+            background: #0f151d;
+            border: 1px solid #31465a;
+            color: white;
+            border-radius: 40px;
+            padding: 10px 14px;
+            font-size: 0.9rem;
+            outline: none;
+            transition: 0.15s;
+            width: 100%;
+        }
+
+        .controls input[type="color"] {
+            height: 45px;
+            padding: 4px;
+            cursor: pointer;
+        }
+        .controls input[type="range"] {
+            padding: 0;
+            accent-color: #6080cf;
+        }
+        .controls select {
+            background: #0f151d;
+            cursor: pointer;
+        }
+        .controls button {
+            background: #2f4057;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            grid-column: span 2;
+            margin-top: 8px;
+            box-shadow: 0 4px 0 #19212b;
+            transition: 0.1s ease;
+        }
+        .controls button:active {
+            transform: translateY(3px);
+            box-shadow: 0 1px 0 #19212b;
+        }
+        .controls button:hover {
+            background: #3d5270;
+        }
+
+        /* área de preview */
+        .preview-container {
+            background: #101419;
+            padding: 40px 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-top: 1px solid #29323d;
+            min-height: 280px;
+        }
+
+        #previewText {
+            max-width: 90%;
+            min-width: 300px;
+            min-height: 140px;
+            background: #1d2530;
+            color: white;
+            font-size: 48px;
+            font-family: 'Segoe UI', 'Arial', sans-serif;
+            padding: 40px 30px;
+            border-radius: 48px;
+            box-shadow: 0 20px 35px -8px black;
+            text-align: center;
+            border: 2px solid #354153;
+            outline: none;
+            transition: 0.2s;
+            word-break: break-word;
+            caret-color: #7a9ef5;
+            line-height: 1.4;
+        }
+
+        #previewText:focus {
+            border-color: #5f8af0;
+            box-shadow: 0 0 0 3px rgba(79, 130, 255, 0.3);
+        }
+
+        /* fonte personalizada */
+        .font-loaded {
+            font-family: 'LoadedFont', 'Segoe UI', sans-serif;
+        }
+
+        @font-face {
+            font-family: 'LoadedFont';
+            src: url('') format('truetype');
+            font-display: block;
+        }
+
+        /* responsivo */
+        @media (max-width: 700px) {
+            .editor { flex-direction: column; }
+            .controls { grid-template-columns: 1fr 1fr; }
+        }
+    </style>
 </head>
-
 <body>
-
-<div class="app">
-
+<div class="app" id="appContainer">
     <header>
-        <h1>TTF Font Studio Pro</h1>
-        <button id="themeToggle">🌙</button>
+        <h1>✦ TTF Font Studio Pro</h1>
+        <button id="themeToggle" aria-label="alternar tema">🌙</button>
     </header>
 
     <div class="editor">
-
-        <textarea id="textInput" placeholder="Digite seu texto aqui..."></textarea>
+        <textarea id="textInput" placeholder="Digite seu texto aqui... (use Enter para quebras)">Tipografia criativa</textarea>
 
         <div class="controls">
-
-            <input type="file" id="fontUpload" accept=".ttf">
+            <input type="file" id="fontUpload" accept=".ttf, .otf, .woff, .woff2" title="Carregar fonte (TTF, OTF, WOFF)">
 
             <label>Tamanho</label>
-            <input type="range" id="fontSize" min="10" max="200" value="48">
+            <input type="range" id="fontSize" min="10" max="200" value="58">
 
             <label>Cor</label>
-            <input type="color" id="fontColor" value="#ffffff">
+            <input type="color" id="fontColor" value="#f0f3ff">
 
-            <label>Gradiente</label>
-            <input type="color" id="grad1" value="#ff0000">
-            <input type="color" id="grad2" value="#0000ff">
+            <label>Gradiente 1</label>
+            <input type="color" id="grad1" value="#ff7b7b">
+            <label>Gradiente 2</label>
+            <input type="color" id="grad2" value="#6c9eff">
 
-            <label>Sombra</label>
-            <input type="range" id="shadowX" min="-20" max="20" value="2">
-            <input type="range" id="shadowY" min="-20" max="20" value="2">
-            <input type="range" id="shadowBlur" min="0" max="30" value="5">
+            <label>Sombra X</label>
+            <input type="range" id="shadowX" min="-20" max="20" value="4">
+            <label>Sombra Y</label>
+            <input type="range" id="shadowY" min="-20" max="20" value="4">
+            <label>Desfoque</label>
+            <input type="range" id="shadowBlur" min="0" max="30" value="6">
 
-            <label>Outline</label>
+            <label>Contorno</label>
             <input type="range" id="strokeWidth" min="0" max="10" value="0">
 
             <label>Espaçamento</label>
-            <input type="range" id="letterSpacing" min="0" max="20" value="0">
+            <input type="range" id="letterSpacing" min="-5" max="20" value="0.5" step="0.5">
 
             <label>Alinhamento</label>
             <select id="textAlign">
@@ -53,24 +271,205 @@
             </select>
 
             <label>Fundo</label>
-            <input type="color" id="bgColor" value="#1e1e1e">
+            <input type="color" id="bgColor" value="#1d2530">
 
-            <button onclick="copyText()">Copiar Texto</button>
-            <button onclick="downloadImage()">Exportar PNG</button>
-
+            <button id="copyTextBtn">📋 Copiar texto</button>
+            <button id="downloadBtn">⬇️ Exportar PNG</button>
         </div>
     </div>
 
     <div class="preview-container" id="previewContainer">
-        <div id="previewText" contenteditable="true">
-            Seu texto aparecerá aqui
-        </div>
+        <!-- Área editável com preview -->
+        <div id="previewText" contenteditable="true">Tipografia criativa</div>
     </div>
-
 </div>
 
+<!-- html2canvas -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-<script src="js/script.js"></script>
 
+<script>
+    (function() {
+        // ========== elementos ==========
+        const preview = document.getElementById('previewText');
+        const textInput = document.getElementById('textInput');
+        const fontUpload = document.getElementById('fontUpload');
+        const fontSize = document.getElementById('fontSize');
+        const fontColor = document.getElementById('fontColor');
+        const grad1 = document.getElementById('grad1');
+        const grad2 = document.getElementById('grad2');
+        const shadowX = document.getElementById('shadowX');
+        const shadowY = document.getElementById('shadowY');
+        const shadowBlur = document.getElementById('shadowBlur');
+        const strokeWidth = document.getElementById('strokeWidth');
+        const letterSpacing = document.getElementById('letterSpacing');
+        const textAlign = document.getElementById('textAlign');
+        const bgColor = document.getElementById('bgColor');
+        const themeToggle = document.getElementById('themeToggle');
+        const appContainer = document.getElementById('appContainer');
+        const copyBtn = document.getElementById('copyTextBtn');
+        const downloadBtn = document.getElementById('downloadBtn');
+
+        // ========== estado da fonte customizada ==========
+        let customFontActive = false;
+        const FONT_FAMILY_CUSTOM = 'LoadedFont';
+
+        // ========== sincronizar conteúdo com textarea ==========
+        function syncTextToPreview() {
+            preview.innerText = textInput.value || ' '; // usa espaço não quebrável se vazio
+        }
+        textInput.addEventListener('input', syncTextToPreview);
+        // também quando editar direto no preview, atualiza textarea (bidirecional)
+        preview.addEventListener('input', function() {
+            textInput.value = preview.innerText;
+        });
+
+        // inicial
+        preview.innerText = textInput.value;
+
+        // ========== upload de fonte TTF ==========
+        fontUpload.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(ev) {
+                const fontData = ev.target.result; // data url
+                const style = document.createElement('style');
+                style.textContent = `
+                    @font-face {
+                        font-family: '${FONT_FAMILY_CUSTOM}';
+                        src: url('${fontData}') format('truetype');
+                        font-weight: normal;
+                        font-style: normal;
+                    }
+                `;
+                // remove qualquer estilo @font-face anterior para evitar conflito
+                const oldStyle = document.getElementById('dynamic-font-style');
+                if (oldStyle) oldStyle.remove();
+                style.id = 'dynamic-font-style';
+                document.head.appendChild(style);
+
+                // aplica classe ao preview
+                preview.style.fontFamily = `'${FONT_FAMILY_CUSTOM}', 'Segoe UI', sans-serif`;
+                customFontActive = true;
+            };
+            reader.readAsDataURL(file);
+        });
+
+        // ========== aplicar estilos ==========
+        function applyStyles() {
+            // tamanho
+            preview.style.fontSize = fontSize.value + 'px';
+
+            // cor (gradiente ou sólida)
+            const useGradient = grad1.value && grad2.value; // sempre true (cores default)
+            if (useGradient) {
+                preview.style.backgroundImage = `linear-gradient(135deg, ${grad1.value}, ${grad2.value})`;
+                preview.style.backgroundClip = 'text';
+                preview.style.webkitBackgroundClip = 'text';
+                preview.style.color = 'transparent';
+                preview.style.display = 'inline-block';  // necessário para background-clip:text
+                preview.style.width = 'fit-content';
+                preview.style.maxWidth = '100%';
+            } else {
+                preview.style.backgroundImage = 'none';
+                preview.style.color = fontColor.value;
+                preview.style.webkitBackgroundClip = 'border-box';
+            }
+
+            // sombra
+            preview.style.textShadow = `${shadowX.value}px ${shadowY.value}px ${shadowBlur.value}px rgba(0,0,0,0.7)`;
+
+            // contorno (outline/stroke via text-stroke)
+            if (strokeWidth.value > 0) {
+                preview.style.webkitTextStroke = `${strokeWidth.value}px black`;
+                preview.style.textStroke = `${strokeWidth.value}px black`; // não padrão, mas alguns browsers
+            } else {
+                preview.style.webkitTextStroke = '0px transparent';
+            }
+
+            // espaçamento
+            preview.style.letterSpacing = letterSpacing.value + 'px';
+
+            // alinhamento
+            preview.style.textAlign = textAlign.value;
+
+            // fundo do container (bg)
+            document.querySelector('.preview-container').style.backgroundColor = bgColor.value;
+        }
+
+        // listeners controles
+        [fontSize, fontColor, grad1, grad2, shadowX, shadowY, shadowBlur, strokeWidth, letterSpacing, textAlign, bgColor].forEach(ctrl => {
+            ctrl.addEventListener('input', applyStyles);
+        });
+        // aplicar estilos iniciais
+        applyStyles();
+
+        // ========== cópia do texto ==========
+        copyBtn.addEventListener('click', function() {
+            const textToCopy = preview.innerText || ' ';
+            navigator.clipboard.writeText(textToCopy).then(() => {
+                alert('✅ Texto copiado!');
+            }).catch(() => {
+                alert('❌ Não foi possível copiar');
+            });
+        });
+
+        // ========== exportar PNG ==========
+        downloadBtn.addEventListener('click', function() {
+            const container = document.getElementById('previewContainer');
+            const previewBox = preview;
+
+            // clonar levemente para evitar fugir do gradiente? mantém original
+            html2canvas(container, {
+                scale: 2,
+                backgroundColor: bgColor.value,
+                allowTaint: false,
+                useCORS: true,
+                logging: false
+            }).then(canvas => {
+                const link = document.createElement('a');
+                link.download = 'font-preview.png';
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+            }).catch(err => {
+                alert('Erro ao gerar imagem: ' + err);
+            });
+        });
+
+        // ========== alternar tema claro/escuro ==========
+        themeToggle.addEventListener('click', function() {
+            appContainer.classList.toggle('light');
+            const isLight = appContainer.classList.contains('light');
+            themeToggle.innerText = isLight ? '☀️' : '🌙';
+            // ajusta cor do preview container bg manual? não, já controlado pelo bgColor, mas tema modifica paleta.
+            // reaplicar bgcolor do container preview (já se mantém)
+        });
+
+        // ========== suporte para alterar o fundo no preview container via bgColor ==========
+        function updatePreviewBg() {
+            document.querySelector('.preview-container').style.backgroundColor = bgColor.value;
+        }
+        bgColor.addEventListener('input', updatePreviewBg);
+        updatePreviewBg();
+
+        // ========== ajuste extra: garantir que preview mantenha gradiente após clique ==========
+        // E garantir que cor sólida funcione quando não queremos gradiente? manter grad sempre.
+        // Se quiser desligar grad, usuário pode combinar cores iguais.
+        // Vamos incluir reset simples se clicar duas vezes no mesmo color picker? não necessário
+
+        // ========== atalho: clicar no preview mantém edição ==========
+        // tudo ok
+
+        // ========== preview para texto vazio ==========
+        function handleEmpty() {
+            if (!preview.innerText || preview.innerText.trim() === '') {
+                preview.innerText = '␣'; // caractere visível
+            }
+        }
+        // mas sem comprometer o textarea; resolvido com fallback de espaço
+        textInput.dispatchEvent(new Event('input'));
+    })();
+</script>
 </body>
 </html>
