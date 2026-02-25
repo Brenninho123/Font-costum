@@ -2,26 +2,87 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <title>TTF Font Preview</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TTF Font Preview Studio</title>
+
     <link rel="stylesheet" href="css/style.css">
+
+    <!-- Google Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
 </head>
 <body>
 
-    <div class="container">
-        <h1>Preview de Fonte TTF</h1>
+    <div class="app">
 
-        <textarea id="textInput" placeholder="Digite seu texto aqui..."></textarea>
+        <!-- Header -->
+        <header class="header">
+            <h1>TTF Font Preview Studio</h1>
+            <p>Importe sua fonte .TTF e personalize seu texto</p>
+        </header>
 
-        <div class="controls">
-            <input type="file" id="fontUpload" accept=".ttf">
-            <button onclick="downloadImage()">Exportar como PNG</button>
-        </div>
+        <!-- Editor -->
+        <section class="editor">
 
-        <div class="preview-container">
-            <p id="previewText">Seu texto aparecerá aqui</p>
-        </div>
+            <!-- Texto -->
+            <div class="editor-section">
+                <label>Texto</label>
+                <textarea id="textInput" placeholder="Digite seu texto aqui..."></textarea>
+            </div>
+
+            <!-- Controles -->
+            <div class="editor-controls">
+
+                <div class="control-group">
+                    <label>Importar Fonte (.ttf)</label>
+                    <input type="file" id="fontUpload" accept=".ttf">
+                </div>
+
+                <div class="control-group">
+                    <label>Tamanho</label>
+                    <input type="range" id="fontSize" min="12" max="150" value="32">
+                </div>
+
+                <div class="control-group">
+                    <label>Cor</label>
+                    <input type="color" id="fontColor" value="#ffffff">
+                </div>
+
+                <div class="control-group">
+                    <label>Alinhamento</label>
+                    <select id="textAlign">
+                        <option value="left">Esquerda</option>
+                        <option value="center" selected>Centro</option>
+                        <option value="right">Direita</option>
+                    </select>
+                </div>
+
+                <div class="control-group">
+                    <button class="export-btn" onclick="downloadImage()">
+                        Exportar como PNG
+                    </button>
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- Preview -->
+        <section class="preview-section">
+            <div class="preview-container">
+                <p id="previewText">Seu texto aparecerá aqui</p>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>© 2026 - TTF Font Studio</p>
+        </footer>
+
     </div>
 
+    <!-- html2canvas -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="js/script.js"></script>
+
 </body>
 </html>
