@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>TTF Font Preview</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <div class="container">
+        <h1>Preview de Fonte TTF</h1>
+
+        <textarea id="textInput" placeholder="Digite seu texto aqui..."></textarea>
+
+        <div class="controls">
+            <input type="file" id="fontUpload" accept=".ttf">
+            <button onclick="downloadImage()">Exportar como PNG</button>
+        </div>
+
+        <div class="preview-container">
+            <p id="previewText">Seu texto aparecerá aqui</p>
+        </div>
+    </div>
+
+    <script src="js/script.js"></script>
+</body>
+</html>
