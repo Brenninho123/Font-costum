@@ -1,0 +1,44 @@
+body {
+    background: #121212;
+    color: white;
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    padding: 40px;
+}
+
+.container {
+    width: 700px;
+    text-align: center;
+}
+
+h1 {
+    margin-bottom: 20px;
+}
+
+textarea {
+    width: 100%;
+    height: 120px;
+    padding: 10px;
+    font-size: 18px;
+    border-radius: 8px;
+    border: none;
+    resize: none;
+}
+
+.controls {
+    margin: 15px 0;
+}
+
+.preview-container {
+    background: #1e1e1e;
+    padding: 30px;
+    border-radius: 12px;
+    margin-top: 20px;
+    min-height: 120px;
+}
+
+#previewText {
+    font-size: 32px;
+    word-break: break-word;
+}
