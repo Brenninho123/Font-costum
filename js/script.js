@@ -20,12 +20,21 @@ const grad2 = document.getElementById("grad2");
 const previewContainer = document.getElementById("previewContainer");
 const themeToggle = document.getElementById("themeToggle");
 
-/* Atualização ao digitar */
+let currentFontName = null;
+let currentFontBase64 = null;
+
+/* ========================= */
+/* Atualiza Texto ao Digitar */
+/* ========================= */
+
 textInput.addEventListener("input", () => {
     previewText.innerText = textInput.value || "Seu texto aparecerá aqui";
 });
 
-/* Atualização geral */
+/* ========================= */
+/* Atualiza Estilo */
+/* ========================= */
+
 function updateStyle() {
 
     previewText.style.fontSize = fontSize.value + "px";
@@ -38,6 +47,9 @@ function updateStyle() {
     previewText.style.webkitBackgroundClip = "text";
     previewText.style.webkitTextFillColor = "transparent";
 
+    /* Cor normal (fallback) */
+    previewText.style.color = fontColor.value;
+
     /* Sombra */
     previewText.style.textShadow =
         `${shadowX.value}px ${shadowY.value}px ${shadowBlur.value}px black`;
@@ -47,37 +59,90 @@ function updateStyle() {
         `${strokeWidth.value}px black`;
 }
 
-/* Eventos */
+/* Eventos automáticos */
 document.querySelectorAll("input, select").forEach(el => {
     el.addEventListener("input", updateStyle);
 });
 
-/* Upload fonte */
+/* ========================= */
+/* Upload Fonte TTF */
+/* ========================= */
+
 fontUpload.addEventListener("change", function(e) {
     const file = e.target.files[0];
     if (!file) return;
 
-    const fontName = "CustomFont";
+    currentFontName = "CustomFont";
+
     const reader = new FileReader();
 
     reader.onload = function(event) {
-        const font = new FontFace(fontName, event.target.result);
+
+        const arrayBuffer = event.target.result;
+
+        /* Salvar Base64 para copiar depois */
+        const base64Reader = new FileReader();
+        base64Reader.onload = function(b64) {
+            currentFontBase64 = b64.target.result;
+        };
+        base64Reader.readAsDataURL(file);
+
+        const font = new FontFace(currentFontName, arrayBuffer);
         font.load().then(function(loaded) {
             document.fonts.add(loaded);
-            previewText.style.fontFamily = fontName;
+            previewText.style.fontFamily = currentFontName;
         });
     };
 
     reader.readAsArrayBuffer(file);
 });
 
-/* Copiar texto */
-function copyText() {
-    navigator.clipboard.writeText(previewText.innerText);
-    alert("Texto copiado!");
+/* ========================= */
+/* Copiar Texto com Estilo */
+/* ========================= */
+
+async function copyText() {
+
+    let styleBlock = "";
+
+    if (currentFontBase64) {
+        styleBlock = `
+        <style>
+        @font-face {
+            font-family: '${currentFontName}';
+            src: url('${currentFontBase64}');
+        }
+        </style>
+        `;
+    }
+
+    const fullHTML = `
+        ${styleBlock}
+        ${previewText.outerHTML}
+    `;
+
+    const blobHTML = new Blob([fullHTML], { type: "text/html" });
+    const blobText = new Blob([previewText.innerText], { type: "text/plain" });
+
+    const data = [
+        new ClipboardItem({
+            "text/html": blobHTML,
+            "text/plain": blobText
+        })
+    ];
+
+    try {
+        await navigator.clipboard.write(data);
+        alert("Texto + fonte + estilo copiados!");
+    } catch (err) {
+        alert("Erro ao copiar. Use HTTPS ou navegador compatível.");
+    }
 }
 
+/* ========================= */
 /* Exportar PNG */
+/* ========================= */
+
 function downloadImage() {
     html2canvas(previewContainer).then(canvas => {
         const link = document.createElement("a");
@@ -87,7 +152,10 @@ function downloadImage() {
     });
 }
 
-/* Modo Escuro/Claro */
+/* ========================= */
+/* Modo Claro / Escuro */
+/* ========================= */
+
 themeToggle.addEventListener("click", () => {
     document.body.classList.toggle("light");
 });
